@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Binance Price Tracker & Add User</title>
+    <style>
+      #price {
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .green {
+        color: green;
+      }
+      .red {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="price">Loading...</div>
+
+    <h1>Add User</h1>
+    <form action="/user" method="post">
+      <label for="userName">User Name:</label>
+      <input type="text" id="userName" name="userName" /><br /><br />
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" /><br /><br />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" /><br /><br />
+      <input type="submit" value="Submit" />
+    </form>
+    <a href="/users.html">View Users</a>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const priceElement = document.getElementById('price');
+      const socket = io();
+
+      socket.on('priceUpdate', (price) => {
+        let oldPrice = parseFloat(priceElement.innerText) || 0;
+
+        // Determine color based on price change
+        let colorClass = '';
+        if (price > oldPrice) {
+          colorClass = 'green';
+        } else if (price < oldPrice) {
+          colorClass = 'red';
+        }
+
+        // Update price with color
+        priceElement.innerText = price;
+        priceElement.className = colorClass;
+      });
+
+      socket.on('connect', () => {
+        console.log('Connected to WebSocket server.');
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Disconnected from WebSocket server.');
+      });
+    </script>
+  </body>
+</html>

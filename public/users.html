@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Users List</title>
+  </head>
+  <body>
+    <h1>Users List</h1>
+    <ul id="user-list"></ul>
+    <script>
+      fetch('/user')
+        .then((response) => response.json())
+        .then((data) => {
+          const userList = document.getElementById('user-list');
+          data.forEach((user) => {
+            const li = document.createElement('li');
+            li.textContent = `Name: ${user.userName}, Email: ${user.email}`;
+            userList.appendChild(li);
+          });
+        });
+    </script>
+    <a href="/index.html">Add User</a>
+  </body>
+</html>
